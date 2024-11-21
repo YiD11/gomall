@@ -1,0 +1,99 @@
+# This is a docker-compose file with basic cluster infrastructure services.
+services:
+    mysql:
+      image: mysql:5.7
+      container_name: mysql
+      volumes:
+        - type: bind
+          source: ./cluster/data/mysql
+          target: /var/lib/mysql
+      environment:
+        - MYSQL_ROOT_PASSWORD=123456
+        - MYSQL_DATABASE=example
+      ports:
+        - "3306:3306"
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p123456"]
+        interval: 15s
+        timeout: 10s
+        retries: 5
+        start_period: 1m
+    
+    redis:
+      image: redis/redis-stack:6.2.6-v17
+      container_name: redis
+      volumes:
+      - type: bind
+        source: ./cluster/data/redis
+        target: /data
+      ports:
+        - "6379:6379"
+        - "8001:8001"
+      healthcheck:
+        test: ["CMD", "redis-cli", "ping"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 30s
+    
+    jaeger-all-in-one:
+      container_name: jaeger-all-in-one
+      image: jaegertracing/all-in-one:latest
+      ports:
+        - "16686:16686"
+        - "4317:4317"
+        - "4318:4318"
+    
+    prometheus:
+      image: prom/prometheus:latest
+      container_name: prometheus
+      volumes:
+        - ./cluster/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      command:
+        - "--config.file=/etc/prometheus/prometheus.yml"
+      ports:
+        - "9090:9090"
+    
+    grafana:
+      image: grafana/grafana:latest
+      container_name: grafana
+      environment:
+        - GF_AUTH_ANONYMOUS_ENABLED=true
+        - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+        - GF_AUTH_DISABLE_LOGIN_FORM=true
+      ports:
+        - "3000:3000"
+    
+    nats:
+      image: nats:2.10.22
+      container_name: nats
+      command: -m 8222
+      ports:
+        - "4222:4222"
+        - "6222:6222"
+        - "8222:8222"
+    
+    consul:
+      image: "hashicorp/consul:latest"
+      container_name: consul
+      ports:
+        - "8500:8500"
+      environment:
+        CONSUL_BIND_INTERFACE: eth0
+    
+    loki:
+      container_name: loki
+      image: grafana/loki:2.9.2
+      volumes:
+        - ./cluster/config/grafana/loki.yml:/etc/loki/local-config.yaml
+      command: -config.file=/etc/loki/local-config.yaml
+      ports:
+        - "3100:3100"
+
+    promtail:
+      container_name: promtail
+      image: grafana/promtail:2.9.2
+      volumes:
+        - ./cluster/config/grafana/promtail.yml:/etc/promtail/config.yml
+        - ./app/frontend/log:/logs/frontend
+      command: -config.file=/etc/promtail/config.yml

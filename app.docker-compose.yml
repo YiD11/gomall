@@ -1,0 +1,152 @@
+# This is a docker-compose file with basic apps.
+services:
+    frontend:
+      image: frontend:${VERSION}
+      container_name: app_frontend
+      # build:
+        # context: .
+        # dockerfile: ./deploy/frontend.Dockerfile
+      ports:
+        - "8080:8080"
+      environment:
+        - SESSION_SECRET=OTNUGYUIO
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - GO_ENV=dev
+      volumes:
+        - ./app/frontend/conf:/opt/gomall/frontend/conf
+    
+    product:
+      image: product:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=product
+      container_name: app_product
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/product?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - GO_ENV=dev
+      volumes:
+        - ./app/product/conf:/opt/gomall/product/conf
+    
+    user:
+      container_name: app_user
+      image: user:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=user
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/user?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - GO_ENV=dev
+      volumes:
+        - ./app/user/conf:/opt/gomall/user/conf
+        
+    cart:
+      container_name: app_cart
+      image: cart:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=cart
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/cart?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - GO_ENV=dev
+      volumes:
+        - ./app/cart/conf:/opt/gomall/cart/conf
+        
+    order:
+      container_name: app_order
+      image: order:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=order
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/order?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - GO_ENV=dev
+      volumes:
+        - ./app/order/conf:/opt/gomall/order/conf
+        
+    payment:
+      container_name: app_payment
+      image: payment:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=payment
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - GO_ENV=dev
+      volumes:
+        - ./app/payment/conf:/opt/gomall/payment/conf
+        
+    checkout:
+      container_name: app_checkout
+      image: checkout:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=checkout
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/checkout?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - NATS_ADDRESS=nats:4222
+        - GO_ENV=dev
+      volumes:
+        - ./app/checkout/conf:/opt/gomall/checkout/conf
+        
+    email:
+      container_name: app_email
+      image: email:${VERSION}
+      # build:
+        # context: .
+        # dockerfile: ./deploy/svc.Dockerfile
+        # args:
+          # - SVC=email
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger-all-in-one:4317
+        - OTEL_EXPORTER_OTLP_INSECURE=true
+        - MYSQL_DSN=%s:%s@tcp(%s:3306)/email?charset=utf8mb4&parseTime=True&loc=Local
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=123456
+        - MYSQL_HOST=mysql
+        - NATS_ADDRESS=nats:4222
+        - GO_ENV=dev
+      volumes:
+        - ./app/email/conf:/opt/gomall/email/conf
