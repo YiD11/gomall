@@ -28,7 +28,7 @@ jobs:
         sleep 5
         
     - name: start service
-      run: docker compose -f ./app.docker-compose.yml up -d
+      run: VERSION=latest docker compose -f ./app.docker-compose.yml up -d
     - name: Wait for services to be ready
       run: |
         echo "Waiting for services to start..."
