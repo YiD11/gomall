@@ -17,7 +17,6 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
 
-	// "github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 
 	"go.uber.org/zap/zapcore"
@@ -71,18 +70,6 @@ func kitexInit() (opts []server.Option) {
 		CurrentServiceName: ServiceName,
 		RegistryAddr:       RegistryAddr,
 	}))
-
-	// service info
-	// opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
-	// 	ServiceName: conf.GetConf().Kitex.Service,
-	// }))
-
-	// registry
-	// r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

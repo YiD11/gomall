@@ -71,18 +71,6 @@ func kitexInit() (opts []server.Option) {
 		RegistryAddr:       RegistryAddr,
 	}))
 
-	// service info
-	// opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
-	// 	ServiceName: conf.GetConf().Kitex.Service,
-	// }))
-
-	// registry
-	// r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// opts = append(opts, server.WithRegistry(r))
-
 	// klog
 	logger := kitexlogrus.NewLogger()
 	klog.SetLogger(logger)

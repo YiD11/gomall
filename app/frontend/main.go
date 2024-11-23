@@ -104,7 +104,6 @@ func registerMiddleware(h *server.Hertz) {
 	logger := hertzobslogrus.NewLogger(hertzobslogrus.WithLogger(
 		hertzlogrus.NewLogger().Logger(),
 	))
-	// logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
 	hlog.SetLevel(conf.LogLevel())
 

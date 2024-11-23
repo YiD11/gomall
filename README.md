@@ -10,7 +10,7 @@ The main code is in `./app` folder, including frontend, user, product, cart, pay
 
 The project mainly uses Hertz and Kitex frameworks in [Cloudwego community](https://www.cloudwego.io/). The Hertz hanndles HTTP requests and provides router layer to routing and navigation requests, and use RPC protocol to call backend function. The Kitex receive the RPC calling from frontend, CRUD(Create, Read, Update and Delete) corresponding data that the request need in database.
 
-The Service Discovery, Log Collection, Metrics Monitoring and Distributed Tracing are inherited into this project😍.
+Service Discovery, Log Collection, Metrics Monitoring and Distributed Tracing are inherited into this project😍.
 
 ### Run
 
